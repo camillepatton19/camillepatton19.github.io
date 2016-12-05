@@ -40,17 +40,21 @@ function setScene() {
 
 function setLights() {
   // Lighting
-  // var light = new THREE.PointLight(0x999999, 2, 100);
-  // light.position.set(50, 50, 50);
-  // scene.add(light);
+   var light = new THREE.PointLight(0x999999, 2, 100);
+   light.position.set(0, 75, 100);
+   scene.add(light);
 
-  // var lightScene = new THREE.PointLight(0x999999, 2, 100);
-  // lightScene.position.set(0, 5, 0);
-  // scene.add(lightScene);
+  var lightScene = new THREE.PointLight(0x999999, 2, 100);
+   lightScene.position.set(100, 75, 0);
+   scene.add(lightScene);
   
-  // var lightSpot = new THREE.PointLight(0x999999, 2, 100);
-  // lightSpot.position.set(500, 500, 500);
-  // scene.add(lightSpot);
+   var lightSpot = new THREE.PointLight(0x999999, 2, 100);
+   lightSpot.position.set(-100, 75, 0);
+   scene.add(lightSpot);
+   
+  var light4 = new THREE.PointLight(0x999999, 2, 100);
+   light4.position.set(0, 75, -100);
+   scene.add(light4);
   
   var lightAmbient = new THREE.AmbientLight(0x999999);
   scene.add(lightAmbient);
@@ -122,6 +126,7 @@ function animateFlower() {
     flower[i].position.y -= .1;
     if (flower[i].position.y < -15) flower[i].position.y = 75;
   } //flower[i].position.y = 75;
+  
 }
 
 function setControls() {
