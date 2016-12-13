@@ -1,0 +1,13 @@
+body {
+  padding: 10px;
+}
+h1 {
+  color: blue;
+  font-family: verdana;
+  font-size: 100%;
+}
+p  {
+  color: red;
+  font-family: verdana;
+  font-size: 100%;
+}

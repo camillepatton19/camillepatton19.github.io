@@ -7,6 +7,8 @@ var scene,
   controls;
 
 var flower = [];
+var groundFlower = [];
+var possibleColors = [0x0cde70, 0x6495ed, 0x63fafe, 0x2514f7, 0xe4f700, 0x78d400, 0xeb0c87];
 
 init();
 
@@ -19,6 +21,7 @@ function init() {
   setFloor();
 
   setFlower();
+  setGroundFlower();
 
   clock = new THREE.Clock();
   animate();
@@ -40,28 +43,32 @@ function setScene() {
 
 function setLights() {
   // Lighting
-   var light = new THREE.PointLight(0x999999, 2, 100);
-   light.position.set(0, 75, 100);
-   scene.add(light);
+  var light = new THREE.PointLight(0x999999, 2, 100);
+  light.position.set(0, 75, 100);
+  scene.add(light);
 
   var lightScene = new THREE.PointLight(0x999999, 2, 100);
-   lightScene.position.set(100, 75, 0);
-   scene.add(lightScene);
-  
-   var lightSpot = new THREE.PointLight(0x999999, 2, 100);
-   lightSpot.position.set(-100, 75, 0);
-   scene.add(lightSpot);
-   
+  lightScene.position.set(100, 75, 0);
+  scene.add(lightScene);
+
+  var lightSpot = new THREE.PointLight(0x999999, 2, 100);
+  lightSpot.position.set(-100, 75, 0);
+  scene.add(lightSpot);
+
   var light4 = new THREE.PointLight(0x999999, 2, 100);
-   light4.position.set(0, 75, -100);
-   scene.add(light4);
-  
+  light4.position.set(0, 75, -100);
+  scene.add(light4);
+
+  var light5 = new THREE.PointLight(0x999999, 2, 100);
+  light5.position.set(0, 25, 0);
+  scene.add(light5);
+
   var lightAmbient = new THREE.AmbientLight(0x999999);
   scene.add(lightAmbient);
 }
 
 function setFloor() {
-  var floorTexture = THREE.ImageUtils.loadTexture('textures/grass.png');
+  var floorTexture = THREE.ImageUtils.loadTexture('textures/earthtiles.png');
   floorTexture.wrapS = THREE.RepeatWrapping;
   floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat = new THREE.Vector2(50, 50);
@@ -82,6 +89,33 @@ function setFloor() {
   scene.add(floor);
 }
 
+function setGroundFlower() {
+  // ASCII file
+  
+  var loader = new THREE.STLLoader();
+  loader.load('models/3dflower.stl', function(geometry) {
+    var material = new THREE.MeshPhongMaterial({
+      color : possibleColors[Math.round(Math.random()*5)],
+      specular: 0x111111,
+      shininess: 200
+    });
+
+    for (var i = 0; i < 300; i++) {
+      var mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(Math.random() * 360 - 150, Math.random() * 360, Math.random() * 360 - 150);
+      //mesh.position.set(Math.cos(i / 10 * 2 * Math.PI) * 50, 75, Math.sin(i / 10 * 2 * Math.PI) * 100 - 50);
+      mesh.rotation.set(Math.random()*Math.PI*2,Math.random()*100, 0);
+      // mesh.rotation.set(0, Math.PI/2 + Math.atan((camera.position.x-mesh.position.x)/(camera.position.z-mesh.position.z)), 0);
+      mesh.scale.set(.05, .05, .05);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      groundFlower[i] = mesh;
+      scene.add(mesh);
+
+    }
+  });
+}
+
 
 
 function setFlower() {
@@ -89,23 +123,24 @@ function setFlower() {
   var loader = new THREE.STLLoader();
   loader.load('models/3dflower.stl', function(geometry) {
     var material = new THREE.MeshPhongMaterial({
-      color: 0x6495ed,
+      color : possibleColors[Math.round(Math.random()*5)],
       specular: 0x111111,
       shininess: 200
     });
 
     for (var i = 0; i < 300; i++) {
       var mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(Math.random()*360-150, Math.random()*360, Math.random()*360-150);
+      mesh.position.set(Math.random() * 360 - 150, Math.random() * 360, Math.random() * 360 - 150);
       //mesh.position.set(Math.cos(i / 10 * 2 * Math.PI) * 50, 75, Math.sin(i / 10 * 2 * Math.PI) * 100 - 50);
       //mesh.rotation.set(0);
-      // mesh.rotation.set(0, Math.PI/2 + Math.atan((camera.position.x-mesh.position.x)/(camera.position.z-mesh.position.z)), 0);
+     // mesh.rotation.set(Math.random()*2*Math.PI, Math.random()*100, 0);
       mesh.scale.set(.05, .05, .05);
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       flower[i] = mesh;
+      flower[i].rotation.set(Math.random()*2*Math.PI, 0, 0);
       scene.add(mesh);
-      
+
     }
   });
 }
@@ -114,6 +149,7 @@ function setFlower() {
 function animate() {
 
   animateFlower();
+  animateGroundFlower();
 
   requestAnimationFrame(animate);
 
@@ -125,8 +161,15 @@ function animateFlower() {
   for (var i = 0, il = flower.length; i < il; i++) {
     flower[i].position.y -= .1;
     if (flower[i].position.y < -15) flower[i].position.y = 75;
-  } //flower[i].position.y = 75;
-  
+  } //flower[i].position.y = 75;//flower[i].position.y = 0;
+
+}
+function animateGroundFlower() {
+  for (var i = 0, il = groundFlower.length; i < il; i++) {
+    groundFlower[i].position.y -= .1;
+    if (groundFlower[i].position.y < 0) groundFlower[i].position.y = 0;
+  } //flower[i].position.y = 75;//flower[i].position.y = 0;
+
 }
 
 function setControls() {

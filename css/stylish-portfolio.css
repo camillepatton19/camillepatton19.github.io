@@ -63,6 +63,10 @@ hr.small {
     max-width: 100px;
 }
 
+.titlefontcolor {
+  color : #deef07;
+}
+
 /* Side Menu */
 
 #sidebar-wrapper {
@@ -243,6 +247,7 @@ footer {
 }
 
 #to-top {
+  
   display: none;
   position: fixed;
   bottom: 5px;
